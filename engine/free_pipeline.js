@@ -82,7 +82,8 @@ for (const fx of fixtures) {
     p1: p.proba.p1, pn: p.proba.pn, p2: p.proba.p2,
     p1_mkt: null, pn_mkt: null, p2_mkt: null, xg_h: p.xg[0], xg_a: p.xg[1],
     pick: p.pick, value: null, confidence: p.confidence,
-    elo_h: Math.round(R(fx.home)), elo_a: Math.round(R(fx.away)), altitude });
+    elo_h: Math.round(R(fx.home)), elo_a: Math.round(R(fx.away)),
+    city: fx.city, altitude });
 }
 fs.writeFileSync("predictions.json", JSON.stringify(out, null, 2));
 console.log(`→ predictions.json écrit (${out.length} matchs). Sers-le à la PWA.`);

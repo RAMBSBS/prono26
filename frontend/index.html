@@ -3,30 +3,222 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0a0e0a">
+<meta name="theme-color" content="#faf7f2">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@500;600&display=swap" rel="stylesheet">
 <title>PRONO·26</title>
+<style>
+:root{
+  --paper:#faf7f2; --paper2:#f3eee4; --card:#fffdf9; --line:#e9e1d2; --line2:#ddd2bd;
+  --ink:#211c15; --ink2:#5c5345; --mut:#938873;
+  --gold:#b6862c; --gold-d:#8f6618; --gold-l:#d9b25a; --gold-bg:#f6edd8;
+  --draw:#cdbf9f; --away:#5b7780; --pos:#3f7d4e; --neg:#b4452f;
+  --serif:"Fraunces",Georgia,serif; --body:"Hanken Grotesk",system-ui,sans-serif;
+  --mono:"Spline Sans Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  background-image:radial-gradient(120% 50% at 100% 0,rgba(182,134,44,.06),transparent 55%);
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px 56px;padding-top:env(safe-area-inset-top)}
+
+header{padding:22px 0 12px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-d)}
+h1{font-family:var(--serif);font-weight:600;font-size:42px;line-height:.95;letter-spacing:-.5px;margin-top:2px}
+h1 .d{color:var(--gold)}
+.tag{font-size:13px;color:var(--ink2);margin-top:6px;font-weight:500}
+.rule{height:2px;margin:14px 0 0;background:linear-gradient(90deg,var(--gold),transparent 70%)}
+
+.note{display:flex;gap:10px;align-items:flex-start;background:var(--gold-bg);border:1px solid var(--line2);
+  border-radius:12px;padding:11px 13px;margin-top:16px}
+.note .i{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#fff;
+  font-family:var(--serif);font-weight:700;font-size:13px;display:grid;place-items:center;margin-top:1px}
+.note p{font-size:12.5px;line-height:1.5;color:var(--ink2)}
+.note b{color:var(--ink)}
+
+details.legend{margin-top:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+details.legend summary{cursor:pointer;list-style:none;padding:11px 14px;font-size:13px;font-weight:700;color:var(--ink);
+  display:flex;justify-content:space-between;align-items:center}
+details.legend summary::-webkit-details-marker{display:none}
+details.legend summary .chev{color:var(--gold);transition:transform .2s;font-family:var(--mono)}
+details.legend[open] summary .chev{transform:rotate(90deg)}
+.legend .body{padding:0 14px 13px;font-size:12.5px;line-height:1.6;color:var(--ink2)}
+.legend .body b{color:var(--ink)} .legend .k{font-family:var(--mono);color:var(--gold-d);font-weight:600}
+.legend .sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin:0 2px}
+
+.upd{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:14px;display:flex;align-items:center;gap:7px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(182,134,44,.5);animation:p 2.4s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 rgba(182,134,44,.45)}70%{box-shadow:0 0 0 6px rgba(182,134,44,0)}100%{box-shadow:0 0 0 0 rgba(182,134,44,0)}}
+
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:14px 0 6px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink2);
+  background:var(--card);border:1px solid var(--line);padding:8px 13px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.tab.on{color:#fff;background:var(--gold);border-color:var(--gold);box-shadow:0 2px 8px rgba(182,134,44,.25)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 15px 13px;margin-top:13px;
+  box-shadow:0 1px 2px rgba(33,28,21,.03);animation:rise .35s both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ctop{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.comp{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut)}
+.stat{font-family:var(--mono);font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;letter-spacing:.5px}
+.stat.soon{background:var(--paper2);color:var(--ink2)}
+.stat.live{background:#fbe7e1;color:var(--neg)} .stat.done{background:#e6efe7;color:var(--pos)}
+
+.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.team{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center}
+.flag{font-size:30px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12))}
+.mono-flag{width:38px;height:28px;border-radius:5px;background:var(--paper2);border:1px solid var(--line2);
+  display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink2)}
+.nm{font-size:13.5px;font-weight:700;line-height:1.1;letter-spacing:-.2px}
+.score{font-family:var(--serif);font-weight:600;font-size:34px;color:var(--gold-d);text-align:center;min-width:70px;
+  font-variant-numeric:tabular-nums}
+.score small{display:block;font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:1.5px;color:var(--mut);margin-top:3px}
+
+.pick{display:flex;align-items:center;justify-content:center;gap:9px;margin:13px 0 3px;flex-wrap:wrap}
+.pickbox{font-family:var(--mono);font-weight:600;font-size:12px;padding:5px 11px;border-radius:8px;
+  background:var(--gold-bg);color:var(--gold-d);border:1px solid var(--line2)}
+.conf{font-family:var(--mono);font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.conf b{color:var(--ink)}
+
+.bars{margin-top:12px}
+.brow{display:grid;grid-template-columns:42px 1fr;align-items:center;gap:9px}
+.blab{font-family:var(--mono);font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.track{height:24px;border-radius:7px;background:var(--paper2);border:1px solid var(--line);overflow:hidden;display:flex}
+.seg{height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:600;
+  transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.s1{background:var(--gold);color:#fff} .sN{background:var(--draw);color:#fff} .s2{background:var(--away);color:#fff}
+
+.meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:11px;
+  border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--mut)}
+.meta .city{display:flex;align-items:center;gap:5px}
+.meta b{color:var(--ink2)}
+.elo{background:var(--paper2);padding:3px 8px;border-radius:6px}
+
+.ftr{margin-top:20px;font-size:11px;line-height:1.6;color:var(--mut);text-align:center}
+.ftr a{color:var(--gold-d)}
+.empty{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;text-align:center;color:var(--mut);margin-top:13px}
+</style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="brand"><h1>PRONO<span class="dot">·</span></h1><span class="yr">CDM 26</span></div>
-    <div class="sub"><span class="pulse"></span><span id="upd">moteur hybride · xG + cotes</span></div>
+    <div class="kicker">Pronostics</div>
+    <h1>Prono<span class="d">·</span>26</h1>
+    <div class="tag">Coupe du Monde 2026 — modèle Elo maison</div>
+    <div class="rule"></div>
   </header>
-  <div class="refresh">
-    <span class="l">Auto-refresh worker · <span id="cd">—</span></span>
-    <button id="rf">↻ Recalculer</button>
+
+  <div class="note">
+    <div class="i">i</div>
+    <p><b>Comment c'est calculé.</b> Un classement <b>Elo</b> bâti sur 49 000 matchs internationaux réels.
+       Sans xG, sans cotes, sans blessures de dernière minute — les probabilités sont <b>indicatives</b>, pas des certitudes.</p>
   </div>
+
+  <details class="legend">
+    <summary>Comment lire une carte <span class="chev">›</span></summary>
+    <div class="body">
+      <b>Score prédit</b> : le résultat le plus probable selon le modèle.<br>
+      <b>Barre 1 / N / 2</b> : probabilité de victoire domicile / nul / victoire extérieur —
+      <span class="sw" style="background:var(--gold)"></span>1
+      <span class="sw" style="background:var(--draw)"></span>N
+      <span class="sw" style="background:var(--away)"></span>2.<br>
+      <b>Confiance</b> : écart entre les deux issues les plus probables (Faible → Élevée).<br>
+      <b class="k">Elo</b> : force relative des équipes (plus haut = plus fort).
+    </div>
+  </details>
+
+  <div class="upd"><span class="dot"></span><span id="upd">chargement…</span></div>
+
   <div class="tabs" id="tabs"></div>
   <div id="list"></div>
-  <div class="ftr">PRONO·26 — données via worker Cloudflare</div>
+
+  <div class="ftr">
+    Données : <a href="https://github.com/martj42/international_results">international_results</a> (libre) ·
+    Probabilités indicatives, non calibrées.
+  </div>
 </div>
-<script type="module" src="app.js"></script>
+
 <script>
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+const COUNTRY = {
+  "Mexico":["🇲🇽","Mexique"],"South Africa":["🇿🇦","Afrique du Sud"],"South Korea":["🇰🇷","Corée du Sud"],
+  "Czech Republic":["🇨🇿","Tchéquie"],"Canada":["🇨🇦","Canada"],"Bosnia and Herzegovina":["🇧🇦","Bosnie-Herz."],
+  "United States":["🇺🇸","États-Unis"],"Paraguay":["🇵🇾","Paraguay"],"Qatar":["🇶🇦","Qatar"],
+  "Switzerland":["🇨🇭","Suisse"],"Brazil":["🇧🇷","Brésil"],"Morocco":["🇲🇦","Maroc"],"Haiti":["🇭🇹","Haïti"],
+  "Scotland":["🏴󠁧󠁢󠁳󠁣󠁴󠁿","Écosse"],"Australia":["🇦🇺","Australie"],"Turkey":["🇹🇷","Turquie"],"DR Congo":["🇨🇩","RD Congo"],
+  "Uzbekistan":["🇺🇿","Ouzbékistan"],"Panama":["🇵🇦","Panama"],"England":["🏴󠁧󠁢󠁥󠁮󠁧󠁿","Angleterre"],
+  "Croatia":["🇭🇷","Croatie"],"Ghana":["🇬🇭","Ghana"],"Germany":["🇩🇪","Allemagne"],"Curacao":["🇨🇼","Curaçao"],
+  "Curaçao":["🇨🇼","Curaçao"],"Netherlands":["🇳🇱","Pays-Bas"],"Japan":["🇯🇵","Japon"],"Ivory Coast":["🇨🇮","Côte d'Ivoire"],
+  "Ecuador":["🇪🇨","Équateur"],"Sweden":["🇸🇪","Suède"],"Tunisia":["🇹🇳","Tunisie"],"Spain":["🇪🇸","Espagne"],
+  "Cape Verde":["🇨🇻","Cap-Vert"],"Belgium":["🇧🇪","Belgique"],"Egypt":["🇪🇬","Égypte"],"France":["🇫🇷","France"],
+  "Senegal":["🇸🇳","Sénégal"],"Argentina":["🇦🇷","Argentine"],"Algeria":["🇩🇿","Algérie"],"Portugal":["🇵🇹","Portugal"],
+  "Uruguay":["🇺🇾","Uruguay"],"Colombia":["🇨🇴","Colombie"],"Iran":["🇮🇷","Iran"],"Saudi Arabia":["🇸🇦","Arabie S."],
+  "Nigeria":["🇳🇬","Nigéria"],"Jordan":["🇯🇴","Jordanie"],"New Zealand":["🇳🇿","Nouv.-Zélande"],"Norway":["🇳🇴","Norvège"],
+  "Italy":["🇮🇹","Italie"],"Poland":["🇵🇱","Pologne"],"Austria":["🇦🇹","Autriche"],"Denmark":["🇩🇰","Danemark"],
+  "Peru":["🇵🇪","Pérou"],"Chile":["🇨🇱","Chili"],"Cameroon":["🇨🇲","Cameroun"],"Mali":["🇲🇱","Mali"],
+  "Costa Rica":["🇨🇷","Costa Rica"],"Jamaica":["🇯🇲","Jamaïque"],"Greece":["🇬🇷","Grèce"]
+};
+const PICK={p1:"1",pn:"N",p2:"2"};
+const SAMPLE=[
+ {match_date:"2026-06-11",home:"Mexico",away:"South Africa",city:"Mexico City",status:"soon",score_pred:"2-0",p1:75,pn:17,p2:8,pick:"p1",confidence:"Élevée",xg_h:2.21,xg_a:0.59,elo_h:1984,elo_a:1661,altitude:true},
+ {match_date:"2026-06-11",home:"South Korea",away:"Czech Republic",city:"Zapopan",status:"soon",score_pred:"1-1",p1:36,pn:25,p2:39,pick:"p2",confidence:"Faible",xg_h:1.41,xg_a:1.47,elo_h:1893,elo_a:1811,altitude:false},
+ {match_date:"2026-06-12",home:"Canada",away:"Bosnia and Herzegovina",city:"Toronto",status:"soon",score_pred:"1-0",p1:60,pn:23,p2:16,pick:"p1",confidence:"Élevée",xg_h:1.73,xg_a:0.77,elo_h:1907,elo_a:1660,altitude:false},
+ {match_date:"2026-06-12",home:"United States",away:"Paraguay",city:"Inglewood",status:"soon",score_pred:"1-1",p1:34,pn:25,p2:41,pick:"p2",confidence:"Faible",xg_h:1.39,xg_a:1.55,elo_h:1833,elo_a:1941,altitude:false},
+ {match_date:"2026-06-13",home:"Qatar",away:"Switzerland",city:"Santa Clara",status:"soon",score_pred:"0-2",p1:7,pn:15,p2:78,pick:"p2",confidence:"Élevée",xg_h:0.61,xg_a:2.45,elo_h:1545,elo_a:1960,altitude:false},
+ {match_date:"2026-06-13",home:"Brazil",away:"Morocco",city:"East Rutherford",status:"soon",score_pred:"1-1",p1:28,pn:26,p2:46,pick:"p2",confidence:"Moyenne",xg_h:1.1,xg_a:1.48,elo_h:2066,elo_a:2005,altitude:false}
+];
+const $=(id)=>document.getElementById(id);
+let DATA=[],cur=null,isSample=false;
+
+function flagEl(name){
+  const c=COUNTRY[name];
+  if(c) return `<span class="flag">${c[0]}</span>`;
+  const m=name.replace(/[^A-Za-z ]/g,"").split(" ").map(w=>w[0]).join("").slice(0,3).toUpperCase()||name.slice(0,3).toUpperCase();
+  return `<span class="mono-flag">${m}</span>`;
+}
+const frName=(n)=>COUNTRY[n]?COUNTRY[n][1]:n;
+const fmtDay=(d)=>new Date(d+"T12:00").toLocaleDateString("fr-FR",{weekday:"short",day:"2-digit",month:"short"}).replace(".","").toUpperCase();
+
+function bars(p1,pn,p2){
+  const seg=(w,c,l)=>`<div class="seg ${c}" style="width:${w}%">${w>10?l+"%":""}</div>`;
+  return `<div class="track">${seg(p1,"s1",p1)}${seg(pn,"sN",pn)}${seg(p2,"s2",p2)}</div>`;
+}
+function card(m){
+  return `<div class="card">
+    <div class="ctop"><span class="comp">${m.grp?"Groupe "+m.grp:"Coupe du Monde"}</span>
+      <span class="stat ${m.status}">${({soon:"À venir",live:"● Live",done:"Terminé"})[m.status]||"À venir"}</span></div>
+    <div class="teams">
+      <div class="team">${flagEl(m.home)}<span class="nm">${frName(m.home)}</span></div>
+      <div class="score">${(m.score_pred||"–").replace("-","–")}<small>SCORE PRÉDIT</small></div>
+      <div class="team">${flagEl(m.away)}<span class="nm">${frName(m.away)}</span></div>
+    </div>
+    <div class="pick"><span class="pickbox">${PICK[m.pick]} · ${m.pick==="p1"?frName(m.home):m.pick==="p2"?frName(m.away):"Match nul"}</span>
+      <span class="conf">Confiance <b>${m.confidence||"—"}</b></span></div>
+    <div class="bars"><div class="brow"><span class="blab">1 N 2</span>${bars(m.p1,m.pn,m.p2)}</div></div>
+    <div class="meta">
+      <span class="city">📍 <b>${m.city||"—"}</b>${m.altitude?" · altitude":""}</span>
+      <span class="elo">Elo <b>${m.elo_h??"—"}</b>–<b>${m.elo_a??"—"}</b></span>
+    </div>
+  </div>`;
+}
+function render(){
+  const days=[...new Set(DATA.map(m=>m.match_date))].sort();
+  if(!cur||!days.includes(cur))cur=days[0];
+  $("tabs").innerHTML=days.map(d=>`<div class="tab ${d===cur?"on":""}" data-d="${d}">${fmtDay(d)}</div>`).join("");
+  $("list").innerHTML=DATA.filter(m=>m.match_date===cur).map(card).join("")||`<div class="empty">Aucune donnée pour ce jour.</div>`;
+  $("tabs").querySelectorAll(".tab").forEach(t=>t.onclick=()=>{cur=t.dataset.d;render();});
+}
+async function load(){
+  try{ DATA=await (await fetch("predictions.json",{cache:"no-store"})).json(); isSample=false; }
+  catch{ DATA=SAMPLE; isSample=true; }
+  render();
+  const h=new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+  $("upd").textContent=(isSample?"aperçu (données d'exemple)":"à jour "+h)+" · cron horaire";
+}
+load();
+setInterval(load,300000);
 </script>
 </body>
 </html>
