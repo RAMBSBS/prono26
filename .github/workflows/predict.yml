@@ -1,0 +1,40 @@
+name: predict-and-deploy
+# Recalcule les pronos et redéploie la PWA sur GitHub Pages. 100% gratuit.
+on:
+  schedule:
+    - cron: "0 * * * *"      # toutes les heures (cadence réaliste/gratuite ; GitHub peut décaler un peu)
+  workflow_dispatch:          # bouton "Run workflow" manuel
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Télécharger les données + générer les pronos
+        run: |
+          curl -sL -o results.csv https://raw.githubusercontent.com/martj42/international_results/master/results.csv
+          node engine/free_pipeline.js 40
+          cp predictions.json frontend/predictions.json
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend          # on ne publie que la PWA + le JSON frais
+      - id: deploy
+        uses: actions/deploy-pages@v4

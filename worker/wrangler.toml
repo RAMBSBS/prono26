@@ -1,0 +1,20 @@
+name = "prono26"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# Cadence de recalcul.
+# - "0 * * * *"   = toutes les heures (régime normal)
+# - "*/10 * * * *" = toutes les 10 min (fenêtre pré-match : active celui-ci les jours de match)
+# Cloudflare autorise plusieurs crons ; filtre la logique côté code via event.cron si besoin.
+[triggers]
+crons = ["0 * * * *", "*/10 * * * *"]
+
+# Variables non secrètes
+[vars]
+DATA_API_BASE = "https://v3.football.api-sports.io"
+MODEL_WEIGHT = "0.35"
+
+# Secrets à définir via:  npx wrangler secret put <NAME>
+#   DATA_API_KEY
+#   SUPABASE_URL
+#   SUPABASE_KEY      (clé service_role, côté worker uniquement)

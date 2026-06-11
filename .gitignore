@@ -1,0 +1,4 @@
+results.csv
+/predictions.json
+node_modules/
+.DS_Store

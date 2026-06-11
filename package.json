@@ -1,0 +1,14 @@
+{
+  "name": "prono26",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev:worker": "cd worker && npx wrangler dev",
+    "deploy:worker": "cd worker && npx wrangler deploy",
+    "test:engine": "node engine/test.js"
+  },
+  "devDependencies": {
+    "wrangler": "^3"
+  }
+}
